@@ -14,27 +14,19 @@ class BootstrapZeroCurve:
         2) Bootstrap discount factors sequentially
         3) Convert to zero rates
         """
-
-        # --------------------------
-        # Step 1: Setup
-        # --------------------------
-
         market_maturities = np.array(df.columns.astype(float))
         market_yields = np.array(df.iloc[-1].values) / 100  # convert to decimal
 
         max_T = market_maturities.max()
 
-        # Full semiannual grid (0.5, 1.0, 1.5, ..., max_T)
+        # Full semiannual grid 
         grid = np.arange(0.5, max_T + 0.5, 0.5)
 
-        # Shape-preserving interpolation of par yields
+        # PCHIP
         interpolator = PchipInterpolator(market_maturities, market_yields)
         par_yields = interpolator(grid)
 
-        # --------------------------
-        # Step 2: Bootstrap DFs
-        # --------------------------
-
+        # Bootstrap DF
         discount_factors = {}
 
         for i, T in enumerate(grid):
@@ -56,16 +48,14 @@ class BootstrapZeroCurve:
                 DF = (1 - pv_coupons) / (1 + coupon)
 
             discount_factors[T] = DF
-
-        # --------------------------
-        # Step 3: Convert to Zero Rates
-        # --------------------------
-
+            
+        # Convert to Zero Rates
         zero_rates = {}
 
         for T in grid:
             DF = discount_factors[T]
             z = self.compounding * (DF ** (-1/(self.compounding*T)) - 1)
             zero_rates[T] = z * 100  # back to percent
+
 
         return zero_rates
