@@ -5,3 +5,6 @@ Desired Project:
 3. Calibrated Short-Rate Models (Vasicek, CIR, Hull–White)
 4. HJM Framework 
 5. Monte Carlo Pricing of Bonds / Swaptions
+
+References:
+1. Brigo, D. & Mercurio, F. (2006). Interest Rate Models — Theory and Practice: With Smile, Inflation and Credit (2nd ed.). Springer Finance.
