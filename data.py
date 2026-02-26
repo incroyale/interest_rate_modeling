@@ -2,7 +2,7 @@ import pandas as pd
 from fredapi import Fred
 
 
-API_KEY = "5b3b2e40a6372b517e0c74d556b0ca97"
+API_KEY = "INSERT_API_KEY_HERE"
 series = ["DGS1MO", "DGS3MO", "DGS6MO", "DGS1", "DGS2", "DGS3", "DGS5", "DGS7", "DGS10", "DGS20", "DGS30"]
 
 def fetch_treasury_data(series=series, start_date=None, end_date=None):
@@ -35,4 +35,5 @@ def preprocess_data(df):
     return "Error in df"
   new_headings = [1/12, 3/12, 6/12, 1.0, 2.0, 3.0, 5.0, 7.0, 10.0, 20.0, 30.0]
   df.columns = new_headings
+
   return df
