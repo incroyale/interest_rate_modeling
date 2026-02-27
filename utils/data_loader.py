@@ -2,7 +2,7 @@ import pandas as pd
 from fredapi import Fred
 
 
-API_KEY = "5b3b2e40a6372b517e0c74d556b0ca97"
+API_KEY = "API_KEY_HERE"
 series = ["DGS1MO", "DGS3MO", "DGS6MO", "DGS1", "DGS2", "DGS3", "DGS5", "DGS7", "DGS10", "DGS20", "DGS30"]
 
 
