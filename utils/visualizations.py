@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+from scipy.interpolate import CubicSpline
 plt.style.use('dark_background')
 
 
@@ -53,3 +54,30 @@ class YieldCurveVisualizer:
         print(f"""beta0 (Level): {b0:.3f}, beta1 (Slope): {b1:.3f}, beta2 (Curvature): {b2:.3f}, lambda: {lamb:.3f}""")
 
 
+    def plot_ns_vs_spline(self, df, date, ns_model):
+        maturities = df.columns.astype(float).values
+        row = df.loc[date].values
+        ns_model.fit(maturities, row)
+        tau_dense = np.linspace(maturities.min(), maturities.max(), 300)
+        ns_curve = ns_model.predict(tau_dense)
+        idx = np.argsort(maturities)
+        tau_sorted = maturities[idx]
+        y_sorted = row[idx]
+
+        cs = CubicSpline(tau_sorted, y_sorted, bc_type="natural")
+        spline_curve = cs(tau_dense)
+
+        fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+        axes[0].scatter(maturities, row, s=60)
+        axes[0].plot(tau_dense, ns_curve, linewidth=2)
+        axes[0].set_title(f"Nelson–Siegel — {date}")
+        axes[0].set_xlabel("Maturity (Years)")
+        axes[0].set_ylabel("Yield (%)")
+        axes[0].grid(True)
+        axes[1].scatter(maturities, row, s=60)
+        axes[1].plot(tau_dense, spline_curve, linewidth=2)
+        axes[1].set_title(f"Cubic Spline — {date}")
+        axes[1].set_xlabel("Maturity (Years)")
+        axes[1].grid(True)
+        plt.tight_layout()
+        plt.show()
